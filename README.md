@@ -1,2 +1,2 @@
-# collegeArchives
-Repo solely made for archiving source codes made while in college
+# collegeStuff
+Repository solely made for archiving all programs made for courseworks
