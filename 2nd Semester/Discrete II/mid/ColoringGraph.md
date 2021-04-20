@@ -1,0 +1,6 @@
+NIM. 2008561093
+
+Pertama, graph yang direpresentasikan dalam bentuk matrix, dihitung terlebih dahulu derajat masing-masing vertexnya, lalu array tersebut di-sorting dengan algoritma sort (misalnya bubble sort, insertion sort dsb.) secara descending atau dari nilai terbesar dimana nilai derajat menjadi acuan. Setelah itu, buatlah sebuah list untuk menyimpan vertex yang belum diwarnai, sebuah array yang memetakan masing-masing vertex dengan warna yang diterimanya, dan sebuah array sementara untuk menyimpan daftar vertex yang bersebelahan. 
+Untuk setiap vertex yang ada didalam array derajat, masukkan vertex tersebut kedalam list vertex yang belum diwarnai (misalkan l_Uncolored)
+Selama list tersebut belum kosong, Warnailah vertex pertama yang berada didalam array derajat dengan warna pertama dengan cara mengubah nilai dalam array warna yang telah diwarnai. Lalu untuk warna selanjutnya, periksa apakah ada vertex yang bersebelahan dengan vertex yang dimaksud, bila ada masukkan kedalam array untuk vertex yang bersebelahan (misalnya AdjArr). Lalu, untuk setiap iterasi, periksa apakah vertex tersebut tidak bersebelahan dan belum diwarnai, bila iya maka warnai vertex tersebut dengan mengubah nilai dalam array yang telah diwarnai dengan warna yang dimaksud. 
+Lakukan hal ini hingga semua vertex terwarnai.

@@ -1,0 +1,135 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <list>
+
+typedef std::vector<std::vector<int>> matrices_t;
+typedef std::vector<int> array_t;
+typedef std::vector<bool> boolArr_t;
+typedef std::list<int> llist_t;
+
+matrices_t degree(matrices_t vertices);
+matrices_t sort(matrices_t arr);
+array_t colorize(matrices_t graph);
+
+void printArr(array_t arr);
+void printArr(matrices_t arr);
+void printMatrices(matrices_t arr);
+
+matrices_t degree(matrices_t vertices) {
+    int len = vertices.size();
+    matrices_t degree(len, std::vector<int>(2, 0));
+
+    for (int i=0; i<len; i++) {
+        degree[i][0] = i;
+        for (int j=0; j<len; j++) {
+            degree[i][1] += vertices[i][j];
+        }
+    }
+    return degree;
+}
+
+// Bubble Sort
+matrices_t sort(matrices_t arr) {
+    array_t base;
+    int len = arr.size();
+    std::cout << len << std::endl;
+    for (int i=0; i<len; i++) {
+        for (int j=0; j<len-1; j++) {
+            if (arr[j][1] < arr[j+1][1]) {
+                base = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = base;
+            }
+        }
+    }
+    return arr;
+}
+
+
+// Custom implementation of Welsh-Powell
+array_t colorize(matrices_t graph) {
+    int len = graph[0].size();
+    int colors = 0;
+    llist_t uncolored;
+    array_t colored(len, -1);
+    boolArr_t adjVertex(len, false);
+    matrices_t deg = sort(degree(graph));
+
+    for (auto &i: deg) {
+        uncolored.push_back(i[0]);
+    }
+    
+    for (int i=0; i<len; i++) {
+        if (uncolored.empty()) break;
+        int ord = uncolored.front();
+        bool colorize = false;
+        uncolored.pop_front();
+
+        if (i==0) colored[ord] = colors;
+
+        for (int i=0; i<len; i++) if (graph[ord][i] == 1) adjVertex[i] = true;
+        for (int i=0; i<len; i++) {
+            if (!adjVertex[i] && colored[i] == -1) {
+                colored[i] = colors;
+                colorize = true;
+            }
+        }
+
+        for (int i=0; i<len; i++) adjVertex[i] = false;
+        if (colorize) colors++;
+    }
+
+    return colored;
+
+}
+
+void printArr(array_t arr) {
+    for (int i=0; i<arr.size(); i++) {
+        std::cout << i+1 << " ";
+    }
+    std::cout << std::endl;
+
+    for (int i=0; i<arr.size(); i++) {
+        std::cout << arr[i] << " ";
+    }
+    std::cout << std::endl;
+
+}
+
+void printArr(matrices_t arr) {
+    for (int i=0; i<arr.size(); i++) {
+        std::cout << arr[i][0]+1 << " ";
+    }
+    std::cout << std::endl;
+
+    for (int i=0; i<arr.size(); i++) {
+        std::cout << arr[i][1] << " ";
+    }
+    std::cout << std::endl;
+    
+}
+
+void printMatrices(matrices_t arr) {
+    for (int i=0; i<arr.size(); i++) {
+        for (int j=0; j<arr[i].size(); j++) {
+            std::cout << arr[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+int main() {
+    matrices_t graph = {
+        {0, 1, 0, 1, 1},
+        {1, 0, 1, 0, 0},
+        {0, 1, 0, 1, 1},
+        {1, 0, 1, 0, 1},
+        {1, 0, 1, 1, 0}
+    };
+
+    printMatrices(graph);
+    array_t done = colorize(graph);
+    std::cout << "Colorized: " << std::endl;
+    printArr(done);
+}

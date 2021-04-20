@@ -1,0 +1,162 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <conio.h>
+
+typedef std::vector<int> array_t;
+typedef std::vector<array_t> matrices_t;
+typedef std::vector<bool> boolArr_t;
+
+bool isNextEdge(matrices_t graph, int x, int y);
+bool isEuler(matrices_t graph);
+int degree(array_t arr);
+int countVertices(matrices_t graph, int idx, boolArr_t visited);
+matrices_t mkEdge(matrices_t graph, int x, int y);
+matrices_t init(size_t len);
+matrices_t rmEdge(matrices_t graph, int x, int y);
+void findRoute(matrices_t graph);
+void findRouteRec(matrices_t graph, int curr);
+void printMatrix(matrices_t vertices, size_t len);
+
+int main() {
+    size_t size = 4;
+    // std::cout << "Masukkan ukuran graph: ";
+    // std::cin >> size;
+
+    // matrices_t graph = init(size);
+    matrices_t graph(size, array_t(size, 0));
+    // graph = mkEdge(graph, 0, 1);
+    // graph = mkEdge(graph, 0, 2);
+    // graph = mkEdge(graph, 1, 2);
+    // graph = mkEdge(graph, 2, 3);
+    
+    graph = mkEdge(graph, 0, 1);
+    graph = mkEdge(graph, 1, 2);
+    graph = mkEdge(graph, 2, 3);
+    graph = mkEdge(graph, 3, 1);
+
+
+    printMatrix(graph, size);
+    findRoute(graph);
+}
+
+matrices_t init(size_t len) {
+    matrices_t vertices(len, array_t(len));
+
+    for (int i=0; i<len; i++) {
+        for (int j=0; j<len; j++) {
+            if (i!=j) {
+                std::cout << "Enter 1 if " << i+1 << " and " << j+1 << " connected: ";
+                std::cin >> vertices[i][j];
+            } else {
+                vertices[i][j] = 0;
+            }
+        }
+    }
+
+    return vertices;
+}
+
+void printMatrix(matrices_t vertices, size_t len) {
+    for (int i=0; i<len; i++) {
+        for (int j=0; j<len; j++) {
+            std::cout << vertices[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+bool isNextEdge(matrices_t graph, int x, int y) {
+    int ctr = 0;
+    for (int i=0; i<graph[x].size(); i++) {
+        ctr+=i;
+    }
+
+    if (ctr == 1) return true;
+
+    boolArr_t visited1(graph.size(), false);
+    int count1 = countVertices(graph, x, visited1);
+    graph = rmEdge(graph, x, y);
+
+    boolArr_t visited2(graph.size(), false);
+    int count2 = countVertices(graph, x, visited2);
+    graph = mkEdge(graph, x, y);
+
+    std::cout << " " << count1 << " " << count2 << std::endl;
+    return count1 > count2 ? true : false;
+}
+
+bool isEuler(matrices_t graph) {
+    int odd = 0;
+    for (int i=0; i<graph.size(); i++) {
+        if (degree(graph[i]) % 2 != 0) odd++;
+        if (odd > 2) return false;
+    }
+    return true;
+}
+
+int degree(array_t arr) {
+    int ctr=0;
+    for (auto &i: arr) {
+        ctr += i;
+    }
+    return ctr;
+}
+
+int countVertices(matrices_t graph, int idx, boolArr_t visited) {
+    int ctr = 1;
+    visited[idx] = true;
+
+    for (int i=0; i<graph.size(); i++) {
+        if (visited[i] == false) {
+            ctr += countVertices(graph, i, visited);
+        }
+    }
+
+    return ctr;
+}
+
+matrices_t mkEdge(matrices_t graph, int x, int y) {
+    graph[x][y] = 1;
+    graph[y][x] = 1;
+    return graph;
+}
+
+matrices_t rmEdge(matrices_t graph, int x, int y) {
+    graph[x][y] = 0;
+    graph[y][x] = 0;
+    return graph;
+}
+
+void findRoute(matrices_t graph) {
+    int x = 0;
+    int odd = 0;
+
+    if (!isEuler(graph)) {
+        std::cout << "Graph ini bukan Euler!\n";
+        getch();
+        exit(-1);
+    }
+
+    for (int i=0; i<graph.size(); i++) {
+        if (degree(graph[i]) % 2 != 0) {
+            x = i;
+            std::cout << "ODD!" << std::endl;
+            break;
+        }
+    }
+    
+    findRouteRec(graph, x);
+}
+
+void findRouteRec(matrices_t graph, int curr) {
+    for (auto &next: graph[curr]) {
+        if (isNextEdge(graph, curr, next)) {
+            std::cout << next << " In!\n";
+            std::cout << curr << "-" << next << " ";
+            rmEdge(graph, curr, next);
+            findRouteRec(graph, next);
+        }
+    }
+}
+

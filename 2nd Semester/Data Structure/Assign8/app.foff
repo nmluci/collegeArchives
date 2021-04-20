@@ -1,0 +1,108 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <conio.h>
+
+struct llist_t {
+    int data;
+    struct llist_t* next;
+};
+typedef struct llist_t* llist;
+
+llist init(llist obj);
+llist addItem(llist obj, int val);
+llist getMiddle(llist head, llist tail);
+llist binarySearch(llist obj, int val);
+void printArray(llist obj);
+
+int main() {
+    llist arr = malloc(sizeof(struct llist_t));
+    arr->next = NULL;
+    int val = 0;
+
+    addItem(arr, 10);
+
+    // for (int i=0; i<=100; i+=5) {
+    //     addItem(arr, i);
+    // }
+ 
+    // arr = init(arr);
+    printArray(arr);
+    printf("Input: ");
+    scanf("%d", &val);
+
+    printf("\nfound at %d\n", binarySearch(arr, val)->data);
+}
+
+llist addItem(llist obj, int val) {
+    llist curr = obj;
+    llist new = malloc(sizeof(struct llist_t));
+    new->data = val;
+    new->next = NULL;
+
+    if (obj == NULL) {
+        obj = new;
+    } else {
+        do {
+            curr = curr->next;
+        } while (curr->next != NULL);
+        curr->next = new;
+    }
+
+    return obj;
+}
+
+void printArray(llist obj) {
+    do {
+        printf("%d ", obj->data);
+        obj = obj->next;
+    } while (obj != NULL);
+    printf("\n");
+}
+
+llist getMiddle(llist head, llist tail) {
+    llist x;
+    llist y;
+
+    while (x != y) {
+        x = x->next;
+        if (x != y) {
+            x = x->next;
+            y = y->next;
+        }
+    }
+    return y;
+}
+
+llist binarySearch(llist obj, int val) {
+    llist left = obj;
+    llist right = NULL;
+
+    // while (left <= right) {
+    //     mid = left + (right-left)/2;
+
+    //     if (arr[mid] == val) {
+    //         return mid;
+    //     } else {
+    //         if (arr[mid] < val) {
+    //             left = ++mid;
+    //         } else {
+    //             right = --mid;
+    //         }
+    //     }
+    // }
+
+    do {
+        llist mid = getMiddle(left, right);
+        if (mid == NULL) return NULL;
+        
+        if (mid->data == val) return mid;
+        else {
+            if (mid->data < val) left = mid->next;
+            else right = mid;
+        }
+    } while (right == NULL || right != left);
+
+    return NULL;
+    
+    // not found, adding one
+}
