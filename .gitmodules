@@ -1,3 +1,6 @@
 [submodule "Algorithm Practicum/Final Project"]
 	path = Algorithm Practicum/Final Project
 	url = https://github.com/nmluci/KisatenSim
+[submodule "Data Structure/FinalProject"]
+	path = Data Structure/FinalProject
+	url = https://github.com/nmluci/CinemaSim
