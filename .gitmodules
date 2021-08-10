@@ -1,6 +1,3 @@
-[submodule "Algorithm Practicum/KisatenSim"]
-	path = Algorithm Practicum/KisatenSim
-	url = https://github.com/nmluci/KisatenSim
 [submodule "Algorithm Practicum/Final Project"]
 	path = Algorithm Practicum/Final Project
 	url = https://github.com/nmluci/KisatenSim
